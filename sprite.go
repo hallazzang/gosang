@@ -35,11 +35,6 @@ func NewSprite(r reader) (Sprite, error) {
 	return sp, err
 }
 
-type reader interface {
-	Read([]byte) (int, error)
-	ReadAt([]byte, int64) (int, error)
-}
-
 type spriteHeader struct {
 	Signature, Width, Height, Count uint32
 }
