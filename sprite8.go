@@ -55,11 +55,3 @@ func (sp *Sprite8) Count() int {
 func (sp *Sprite8) Frame(idx int) (image.Image, error) {
 	return nil, nil
 }
-
-func (sp *Sprite8) loadOffsets() error {
-	sp.offsets = make([]uint32, sp.count)
-	if err := binary.Read(sp.r, binary.LittleEndian, &sp.offsets); err != nil {
-		return err
-	}
-	return nil
-}
