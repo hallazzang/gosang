@@ -11,7 +11,13 @@ type Sprite32 struct {
 }
 
 func newSprite32(r reader, header spriteHeader) (*Sprite32, error) {
-	return nil, nil
+	sp := &Sprite32{
+		r:      r,
+		width:  int(header.Width),
+		height: int(header.Height),
+		count:  int(header.Count),
+	}
+	return sp, nil
 }
 
 // ColorBits returns sprite's color bits. This method always returns 32
