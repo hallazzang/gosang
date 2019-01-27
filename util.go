@@ -5,6 +5,7 @@ import (
 	"io"
 )
 
+// reader implements io.Reader and io.ReaderAt.
 type reader interface {
 	Read([]byte) (int, error)
 	ReadAt([]byte, int64) (int, error)
@@ -22,6 +23,7 @@ func (or *offsetedReader) Read(p []byte) (int, error) {
 	return n, err
 }
 
+// sprite8Palette is a color palette used by 8-bit color sprites.
 var sprite8Palette = color.Palette{
 	color.RGBA{0x00, 0x00, 0x00, 0xff},
 	color.RGBA{0x34, 0x5f, 0x2c, 0xff},
