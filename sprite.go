@@ -9,6 +9,7 @@ import (
 
 // Sprite represents single sprite.
 type Sprite interface {
+	ColorBits() int
 	Width() int
 	Height() int
 	Count() int

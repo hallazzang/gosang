@@ -7,6 +7,12 @@ type Sprite32 struct {
 	count  int
 }
 
+// ColorBits returns sprite's color bits. This method always returns 32
+// for Sprite32.
+func (sp *Sprite32) ColorBits() int {
+	return 32
+}
+
 // Width returns sprite's frame width, in pixel.
 func (sp *Sprite32) Width() int {
 	return sp.width
