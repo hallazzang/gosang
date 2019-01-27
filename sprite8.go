@@ -1,5 +1,7 @@
 package gosang
 
+import "image"
+
 // Sprite8 is an 8-bit color sprite.
 type Sprite8 struct {
 	width  int
@@ -26,4 +28,8 @@ func (sp *Sprite8) Height() int {
 // Count returns sprite's frame count.
 func (sp *Sprite8) Count() int {
 	return sp.count
+}
+
+func (sp *Sprite8) Frame(idx int) (image.Image, error) {
+	return nil, nil
 }

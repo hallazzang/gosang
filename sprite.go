@@ -2,7 +2,7 @@ package gosang
 
 import (
 	"encoding/binary"
-	"io"
+	"image"
 
 	"github.com/pkg/errors"
 )
@@ -13,10 +13,11 @@ type Sprite interface {
 	Width() int
 	Height() int
 	Count() int
+	Frame(idx int) (image.Image, error)
 }
 
 // NewSprite creates new sprite from r.
-func NewSprite(r io.ReadSeeker) (Sprite, error) {
+func NewSprite(r reader) (Sprite, error) {
 	var header struct {
 		Signature uint32
 		Width     uint32
@@ -44,4 +45,9 @@ func NewSprite(r io.ReadSeeker) (Sprite, error) {
 		}
 	}
 	return sp, nil
+}
+
+type reader interface {
+	Read([]byte) (int, error)
+	ReadAt([]byte, int64) (int, error)
 }

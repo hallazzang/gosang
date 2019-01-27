@@ -1,5 +1,7 @@
 package gosang
 
+import "image"
+
 // Sprite32 is a 32-bit color sprite.
 type Sprite32 struct {
 	width  int
@@ -26,4 +28,8 @@ func (sp *Sprite32) Height() int {
 // Count returns sprite's frame count.
 func (sp *Sprite32) Count() int {
 	return sp.count
+}
+
+func (sp *Sprite32) Frame(idx int) (image.Image, error) {
+	return nil, nil
 }
