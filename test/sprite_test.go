@@ -13,7 +13,7 @@ func TestNewSprite(t *testing.T) {
 		colorBits, width, height, count int
 	}{
 		{`data\arrow.spr`, 8, 20, 20, 10},
-		{`data\BUTTMENU_ONLINE_1.S32`, 32, 0, 0, 0},
+		{`data\BUTTMENU_ONLINE_1.S32`, 32, 24, 52, 2},
 	} {
 		f, err := os.Open(tc.path)
 		if err != nil {
