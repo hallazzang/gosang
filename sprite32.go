@@ -30,6 +30,7 @@ func (sp *Sprite32) Count() int {
 	return sp.count
 }
 
+// Frame returns specific frame's data as image.Image.
 func (sp *Sprite32) Frame(idx int) (image.Image, error) {
 	return nil, nil
 }
