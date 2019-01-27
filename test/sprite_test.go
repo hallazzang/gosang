@@ -8,21 +8,33 @@ import (
 )
 
 func TestNewSprite(t *testing.T) {
-	f, err := os.Open(`data\arrow.spr`)
-	if err != nil {
-		t.Fatalf("failed to open sprite file: %v", err)
-	}
-	sp, err := gosang.NewSprite(f)
-	if err != nil {
-		t.Fatalf("failed to create new sprite: %v", err)
-	}
-	if w := sp.Width(); w != 20 {
-		t.Errorf("bad sprite frame width; expected 20, got %d", w)
-	}
-	if h := sp.Height(); h != 20 {
-		t.Errorf("bad sprite frame height; expected 20, got %d", h)
-	}
-	if c := sp.Count(); c != 10 {
-		t.Errorf("bad sprite frame count; expected 10, got %d", c)
+	for _, tc := range []struct {
+		path                            string
+		colorBits, width, height, count int
+	}{
+		{`data\arrow.spr`, 8, 20, 20, 10},
+		{`data\BUTTMENU_ONLINE_1.S32`, 32, 0, 0, 0},
+	} {
+		f, err := os.Open(tc.path)
+		if err != nil {
+			t.Fatalf("failed to open sprite file: %v", err)
+		}
+		sp, err := gosang.NewSprite(f)
+		if err != nil {
+			t.Fatalf("failed to open sprite: %v", err)
+		}
+		if cb := sp.ColorBits(); cb != tc.colorBits {
+			t.Errorf("bad sprite color bits; expected %d, got %d", tc.colorBits, cb)
+		}
+		if w := sp.Width(); w != tc.width {
+			t.Errorf("bad sprite frame width; expected %d, got %d", tc.width, w)
+		}
+		if h := sp.Height(); h != tc.height {
+			t.Errorf("bad sprite frame height; expected %d, got %d", tc.height, h)
+		}
+		if c := sp.Count(); c != tc.count {
+			t.Errorf("bad sprite frame count; expected %d, got %d", tc.count, c)
+		}
+		f.Close()
 	}
 }
