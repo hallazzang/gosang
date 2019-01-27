@@ -4,9 +4,14 @@ import "image"
 
 // Sprite8 is an 8-bit color sprite.
 type Sprite8 struct {
+	r      reader
 	width  int
 	height int
 	count  int
+}
+
+func newSprite8(r reader, header spriteHeader) (*Sprite8, error) {
+	return nil, nil
 }
 
 // ColorBits returns sprite's color bits. This method always returns 8

@@ -4,9 +4,14 @@ import "image"
 
 // Sprite32 is a 32-bit color sprite.
 type Sprite32 struct {
+	r      reader
 	width  int
 	height int
 	count  int
+}
+
+func newSprite32(r reader, header spriteHeader) (*Sprite32, error) {
+	return nil, nil
 }
 
 // ColorBits returns sprite's color bits. This method always returns 32
