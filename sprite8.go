@@ -1,6 +1,7 @@
 package gosang
 
 import (
+	"bufio"
 	"encoding/binary"
 	"image"
 
@@ -53,5 +54,31 @@ func (sp *Sprite8) Count() int {
 
 // Frame returns specific frame's data as image.Image.
 func (sp *Sprite8) Frame(idx int) (image.Image, error) {
-	return nil, nil
+	if idx < 0 || idx > sp.count-1 {
+		return nil, errors.New("invalid frame index")
+	}
+	img := image.NewPaletted(image.Rect(0, 0, sp.width, sp.height), sprite8Palette)
+	r := bufio.NewReader(&offsetedReader{sp.r, 0xbf4 + int64(sp.offsets[idx])})
+	for y := 0; y < sp.height; y++ {
+		for x := 0; x < sp.width; {
+			b, err := r.ReadByte()
+			if err != nil {
+				return nil, errors.Wrap(err, "failed to read frame data")
+			}
+			if b == 0xfe {
+				c, err := r.ReadByte()
+				if err != nil {
+					return nil, errors.Wrap(err, "failed to read frame data")
+				}
+				for ; c > 0; c-- {
+					img.SetColorIndex(x, y, b)
+					x++
+				}
+			} else {
+				img.SetColorIndex(x, y, b)
+				x++
+			}
+		}
+	}
+	return img, nil
 }
