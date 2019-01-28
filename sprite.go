@@ -10,10 +10,12 @@ import (
 
 // Sprite represents single sprite. It can either be 8-bit or 32-bit sprite.
 type Sprite interface {
-	ColorBits() int                     // Color bits. 8 or 32.
-	FrameWidth() int                    // Frame width, in pixels.
-	FrameHeight() int                   // Frame height, in pixels.
-	FrameCount() int                    // Frame count.
+	ColorBits() int   // Color bits. 8 or 32.
+	FrameWidth() int  // Frame's width in pixels.
+	FrameHeight() int // Frame's height in pixels.
+	FrameCount() int
+	Width() int
+	Height() int
 	Frame(idx int) (image.Image, error) // Specific frame's data.
 }
 

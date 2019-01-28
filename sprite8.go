@@ -16,6 +16,8 @@ type sprite8 struct {
 	frameHeight int
 	frameCount  int
 	offsets     []uint32
+	width       int
+	height      int
 }
 
 func newSprite8(r io.ReaderAt, header spriteHeader) (*sprite8, error) {
@@ -28,6 +30,12 @@ func newSprite8(r io.ReaderAt, header spriteHeader) (*sprite8, error) {
 	}
 	if err := binary.Read(&offsetedReader{r, 0x4c0}, binary.LittleEndian, &sp.offsets); err != nil {
 		return nil, errors.Wrap(err, "failed to read frame offsets")
+	}
+	if err := binary.Read(&offsetedReader{r, 0xbcc}, binary.LittleEndian, &sp.width); err != nil {
+		return nil, errors.Wrap(err, "failed to read sprite width")
+	}
+	if err := binary.Read(&offsetedReader{r, 0xbd0}, binary.LittleEndian, &sp.height); err != nil {
+		return nil, errors.Wrap(err, "failed to read sprite height")
 	}
 	return sp, nil
 }
@@ -46,6 +54,14 @@ func (sp *sprite8) FrameHeight() int {
 
 func (sp *sprite8) FrameCount() int {
 	return sp.frameCount
+}
+
+func (sp *sprite8) Width() int {
+	return sp.width
+}
+
+func (sp *sprite8) Height() int {
+	return sp.height
 }
 
 func (sp *sprite8) Frame(idx int) (image.Image, error) {
