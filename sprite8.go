@@ -8,8 +8,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Sprite8 is an 8-bit color sprite.
-type Sprite8 struct {
+// sprite8 is an 8-bit color sprite.
+type sprite8 struct {
 	r       reader
 	width   int
 	height  int
@@ -17,8 +17,8 @@ type Sprite8 struct {
 	offsets []uint32
 }
 
-func newSprite8(r reader, header spriteHeader) (*Sprite8, error) {
-	sp := &Sprite8{
+func newSprite8(r reader, header spriteHeader) (*sprite8, error) {
+	sp := &sprite8{
 		r:       r,
 		width:   int(header.Width),
 		height:  int(header.Height),
@@ -32,28 +32,28 @@ func newSprite8(r reader, header spriteHeader) (*Sprite8, error) {
 }
 
 // ColorBits returns sprite's color bits. This method always returns 8
-// for Sprite8.
-func (sp *Sprite8) ColorBits() int {
+// for sprite8.
+func (sp *sprite8) ColorBits() int {
 	return 8
 }
 
 // Width returns sprite's frame width, in pixel.
-func (sp *Sprite8) Width() int {
+func (sp *sprite8) Width() int {
 	return sp.width
 }
 
 // Height returns sprite's frame height, in pixel.
-func (sp *Sprite8) Height() int {
+func (sp *sprite8) Height() int {
 	return sp.height
 }
 
 // Count returns sprite's frame count.
-func (sp *Sprite8) Count() int {
+func (sp *sprite8) Count() int {
 	return sp.count
 }
 
 // Frame returns specific frame's data as image.Image.
-func (sp *Sprite8) Frame(idx int) (image.Image, error) {
+func (sp *sprite8) Frame(idx int) (image.Image, error) {
 	if idx < 0 || idx > sp.count-1 {
 		return nil, errors.New("frame index out of range")
 	}
