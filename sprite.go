@@ -11,9 +11,9 @@ import (
 // Sprite represents single sprite. It can either be 8-bit or 32-bit sprite.
 type Sprite interface {
 	ColorBits() int                     // Color bits. 8 or 32.
-	Width() int                         // Frame width, in pixels.
-	Height() int                        // Frame height, in pixels.
-	Count() int                         // Frame count.
+	FrameWidth() int                    // Frame width, in pixels.
+	FrameHeight() int                   // Frame height, in pixels.
+	FrameCount() int                    // Frame count.
 	Frame(idx int) (image.Image, error) // Specific frame's data.
 }
 
@@ -37,5 +37,5 @@ func NewSprite(r io.ReaderAt) (Sprite, error) {
 }
 
 type spriteHeader struct {
-	Signature, Width, Height, Count uint32
+	Signature, FrameWidth, FrameHeight, FrameCount uint32
 }

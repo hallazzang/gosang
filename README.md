@@ -33,7 +33,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	for i := 0; i < sp.Count(); i++ {
+	for i := 0; i < sp.FrameCount(); i++ {
 		frame, err := sp.Frame(i)
 		if err != nil {
 			panic(err)
