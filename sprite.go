@@ -10,11 +10,11 @@ import (
 
 // Sprite represents single sprite. It can either be 8-bit or 32-bit sprite.
 type Sprite interface {
-	ColorBits() int
-	Width() int
-	Height() int
-	Count() int
-	Frame(idx int) (image.Image, error)
+	ColorBits() int                     // Color bits. 8 or 32.
+	Width() int                         // Frame width, in pixels.
+	Height() int                        // Frame height, in pixels.
+	Count() int                         // Frame count.
+	Frame(idx int) (image.Image, error) // Specific frame's data.
 }
 
 // NewSprite creates new sprite from r.
