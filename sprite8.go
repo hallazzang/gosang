@@ -32,28 +32,22 @@ func newSprite8(r io.ReaderAt, header spriteHeader) (*sprite8, error) {
 	return sp, nil
 }
 
-// ColorBits returns sprite's color bits. This method always returns 8
-// for sprite8.
 func (sp *sprite8) ColorBits() int {
 	return 8
 }
 
-// Width returns sprite's frame width, in pixel.
 func (sp *sprite8) Width() int {
 	return sp.width
 }
 
-// Height returns sprite's frame height, in pixel.
 func (sp *sprite8) Height() int {
 	return sp.height
 }
 
-// Count returns sprite's frame count.
 func (sp *sprite8) Count() int {
 	return sp.count
 }
 
-// Frame returns specific frame's data as image.Image.
 func (sp *sprite8) Frame(idx int) (image.Image, error) {
 	if idx < 0 || idx > sp.count-1 {
 		return nil, errors.New("frame index out of range")
