@@ -7,7 +7,8 @@ Gersang sprite library
 
 ## Example
 
-Here's a simple example that uses **gosang** to extract frame images from sprite to files in PNG format.
+Here's a simple example that uses **gosang** to extract frame images from sprite
+to files in PNG format.
 
 It works well for both 8-bit sprite(.spr) and 32-bit(.S32) sprite.
 
