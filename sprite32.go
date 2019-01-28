@@ -53,5 +53,8 @@ func (sp *Sprite32) Count() int {
 
 // Frame returns specific frame's data as image.Image.
 func (sp *Sprite32) Frame(idx int) (image.Image, error) {
+	if idx < 0 || idx > sp.count-1 {
+		return nil, errors.New("invalid frame index")
+	}
 	return nil, nil
 }
