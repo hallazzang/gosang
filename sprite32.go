@@ -1,8 +1,10 @@
 package gosang
 
 import (
+	"bufio"
 	"encoding/binary"
 	"image"
+	"image/color"
 
 	"github.com/pkg/errors"
 )
@@ -56,5 +58,19 @@ func (sp *Sprite32) Frame(idx int) (image.Image, error) {
 	if idx < 0 || idx > sp.count-1 {
 		return nil, errors.New("frame index out of range")
 	}
-	return nil, nil
+	img := image.NewRGBA(image.Rect(0, 0, sp.width, sp.height))
+	r := bufio.NewReader(&offsetedReader{sp.r, 0xe4c + int64(sp.offsets[idx])})
+	for y := 0; y < sp.height; y++ {
+		for x := 0; x < sp.width; {
+			var p struct{ Count, Blue, Green, Red byte }
+			if err := binary.Read(r, binary.LittleEndian, &p); err != nil {
+				return nil, errors.Wrap(err, "failed to read frame data")
+			}
+			for ; p.Count > 0; p.Count-- {
+				img.SetRGBA(x, y, color.RGBA{p.Red, p.Green, p.Blue, 0xff})
+				x++
+			}
+		}
+	}
+	return img, nil
 }
