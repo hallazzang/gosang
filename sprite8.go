@@ -55,7 +55,7 @@ func (sp *Sprite8) Count() int {
 // Frame returns specific frame's data as image.Image.
 func (sp *Sprite8) Frame(idx int) (image.Image, error) {
 	if idx < 0 || idx > sp.count-1 {
-		return nil, errors.New("invalid frame index")
+		return nil, errors.New("frame index out of range")
 	}
 	img := image.NewPaletted(image.Rect(0, 0, sp.width, sp.height), sprite8Palette)
 	r := bufio.NewReader(&offsetedReader{sp.r, 0xbf4 + int64(sp.offsets[idx])})
