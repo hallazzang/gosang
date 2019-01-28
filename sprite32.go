@@ -1,21 +1,31 @@
 package gosang
 
-import "image"
+import (
+	"encoding/binary"
+	"image"
+
+	"github.com/pkg/errors"
+)
 
 // Sprite32 is a 32-bit color sprite.
 type Sprite32 struct {
-	r      reader
-	width  int
-	height int
-	count  int
+	r       reader
+	width   int
+	height  int
+	count   int
+	offsets []uint32
 }
 
 func newSprite32(r reader, header spriteHeader) (*Sprite32, error) {
 	sp := &Sprite32{
-		r:      r,
-		width:  int(header.Width),
-		height: int(header.Height),
-		count:  int(header.Count),
+		r:       r,
+		width:   int(header.Width),
+		height:  int(header.Height),
+		count:   int(header.Count),
+		offsets: make([]uint32, header.Count),
+	}
+	if err := binary.Read(&offsetedReader{r, 0x4c0}, binary.LittleEndian, &sp.offsets); err != nil {
+		return nil, errors.Wrap(err, "failed to read frame offsets")
 	}
 	return sp, nil
 }
