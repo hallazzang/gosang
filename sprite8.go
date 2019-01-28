@@ -4,20 +4,21 @@ import (
 	"bufio"
 	"encoding/binary"
 	"image"
+	"io"
 
 	"github.com/pkg/errors"
 )
 
 // sprite8 is an 8-bit color sprite.
 type sprite8 struct {
-	r       reader
+	r       io.ReaderAt
 	width   int
 	height  int
 	count   int
 	offsets []uint32
 }
 
-func newSprite8(r reader, header spriteHeader) (*sprite8, error) {
+func newSprite8(r io.ReaderAt, header spriteHeader) (*sprite8, error) {
 	sp := &sprite8{
 		r:       r,
 		width:   int(header.Width),

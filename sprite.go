@@ -3,6 +3,7 @@ package gosang
 import (
 	"encoding/binary"
 	"image"
+	"io"
 
 	"github.com/pkg/errors"
 )
@@ -17,9 +18,9 @@ type Sprite interface {
 }
 
 // NewSprite creates new sprite from r.
-func NewSprite(r reader) (Sprite, error) {
+func NewSprite(r io.ReaderAt) (Sprite, error) {
 	var header spriteHeader
-	if err := binary.Read(r, binary.LittleEndian, &header); err != nil {
+	if err := binary.Read(&offsetedReader{r, 0}, binary.LittleEndian, &header); err != nil {
 		return nil, errors.Wrap(err, "failed to read header")
 	}
 	var sp Sprite

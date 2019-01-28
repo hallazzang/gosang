@@ -5,12 +5,6 @@ import (
 	"io"
 )
 
-// reader implements io.Reader and io.ReaderAt.
-type reader interface {
-	Read([]byte) (int, error)
-	ReadAt([]byte, int64) (int, error)
-}
-
 // offsetedReader implements io.Reader combining io.ReaderAt and offset.
 type offsetedReader struct {
 	r      io.ReaderAt

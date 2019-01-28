@@ -5,20 +5,21 @@ import (
 	"encoding/binary"
 	"image"
 	"image/color"
+	"io"
 
 	"github.com/pkg/errors"
 )
 
 // sprite32 is a 32-bit color sprite.
 type sprite32 struct {
-	r       reader
+	r       io.ReaderAt
 	width   int
 	height  int
 	count   int
 	offsets []uint32
 }
 
-func newSprite32(r reader, header spriteHeader) (*sprite32, error) {
+func newSprite32(r io.ReaderAt, header spriteHeader) (*sprite32, error) {
 	sp := &sprite32{
 		r:       r,
 		width:   int(header.Width),
