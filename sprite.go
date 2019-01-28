@@ -7,7 +7,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Sprite represents single sprite.
+// Sprite represents single sprite. It can either be 8-bit or 32-bit sprite.
 type Sprite interface {
 	ColorBits() int
 	Width() int
