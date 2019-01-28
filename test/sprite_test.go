@@ -2,6 +2,7 @@ package test
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/hallazzang/gosang"
@@ -12,11 +13,11 @@ func TestNewSprite(t *testing.T) {
 		path                                           string
 		colorBits, frameWidth, frameHeight, frameCount int
 	}{
-		{`data\arrow.spr`, 8, 20, 20, 10},
-		{`data\BUTTMENU_ONLINE_1.S32`, 32, 24, 52, 2},
+		{"arrow.spr", 8, 20, 20, 10},
+		{"BUTTMENU_ONLINE_1.S32", 32, 24, 52, 2},
 	} {
 		func() {
-			f, err := os.Open(tc.path)
+			f, err := os.Open(filepath.Join("data", tc.path))
 			if err != nil {
 				t.Fatalf("failed to open sprite file: %v", err)
 			}
