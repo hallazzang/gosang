@@ -17,6 +17,9 @@ type Sprite interface {
 	Width() int
 	Height() int
 	Frame(idx int) (image.Image, error) // Specific frame's data.
+
+	frameOffset(idx int) (int64, error)
+	frameSize(idx int) (int, error)
 }
 
 // NewSprite creates new sprite from r.

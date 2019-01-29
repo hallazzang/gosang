@@ -85,3 +85,11 @@ func (sp *sprite32) Frame(idx int) (image.Image, error) {
 	}
 	return img, nil
 }
+
+func (sp *sprite32) frameOffset(idx int) (int64, error) {
+	return 0, nil
+}
+
+func (sp *sprite32) frameSize(idx int) (int, error) {
+	return 0, nil
+}
