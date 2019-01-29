@@ -50,3 +50,34 @@ func TestNewSprite(t *testing.T) {
 		}()
 	}
 }
+
+func TestFrameSizeAndOffset(t *testing.T) {
+	for _, tc := range []string{"arrow.spr", "BUTTMENU_ONLINE_1.S32"} {
+		func() {
+			f, err := os.Open(filepath.Join("test", "data", tc))
+			if err != nil {
+				t.Fatalf("failed to open sprite file: %v", err)
+			}
+			defer f.Close()
+			sp, err := NewSprite(f)
+			if err != nil {
+				t.Fatal(err)
+			}
+			ao := int64(0)
+			for i := 0; i < sp.FrameCount(); i++ {
+				o, err := sp.frameOffset(i)
+				if err != nil {
+					t.Errorf("faild to get frame #%d's offset: %v", i, err)
+				}
+				if o != ao {
+					t.Errorf("frame #%d's offset is incorrect; expected %d, got %d", i, ao, o)
+				}
+				s, err := sp.frameSize(i)
+				if err != nil {
+					t.Errorf("failed to get frame #%d's size: %v", i, err)
+				}
+				ao += int64(s)
+			}
+		}()
+	}
+}
