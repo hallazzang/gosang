@@ -1,11 +1,9 @@
-package test
+package gosang
 
 import (
 	"os"
 	"path/filepath"
 	"testing"
-
-	"github.com/hallazzang/gosang"
 )
 
 func TestNewSprite(t *testing.T) {
@@ -22,12 +20,12 @@ func TestNewSprite(t *testing.T) {
 		{"BUTTMENU_ONLINE_1.S32", 32, 24, 52, 2, 48, 52},
 	} {
 		func() {
-			f, err := os.Open(filepath.Join("data", tc.path))
+			f, err := os.Open(filepath.Join("test", "data", tc.path))
 			if err != nil {
 				t.Fatalf("failed to open sprite file: %v", err)
 			}
 			defer f.Close()
-			sp, err := gosang.NewSprite(f)
+			sp, err := NewSprite(f)
 			if err != nil {
 				t.Fatalf("failed to open sprite: %v", err)
 			}
