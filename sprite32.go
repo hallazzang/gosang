@@ -19,6 +19,7 @@ type sprite32 struct {
 	offsets     []uint32
 	width       uint32
 	height      uint32
+	lastOffset  uint32
 }
 
 func newSprite32(r io.ReaderAt, header spriteHeader) (*sprite32, error) {
@@ -87,9 +88,22 @@ func (sp *sprite32) Frame(idx int) (image.Image, error) {
 }
 
 func (sp *sprite32) frameOffset(idx int) (int64, error) {
-	return 0, nil
+	if idx < 0 || idx > int(sp.frameCount-1) {
+		return 0, errors.New("frame index out of range")
+	}
+	return int64(sp.offsets[idx]), nil
 }
 
 func (sp *sprite32) frameSize(idx int) (int, error) {
-	return 0, nil
+	if idx < 0 || idx > int(sp.frameCount-1) {
+		return 0, errors.New("frame index out of range")
+	} else if idx < int(sp.frameCount-1) {
+		return int(sp.offsets[idx+1] - sp.offsets[idx]), nil
+	}
+	if sp.lastOffset == 0 {
+		if err := binary.Read(&offsetedReader{sp.r, 0xe20}, binary.LittleEndian, &sp.lastOffset); err != nil {
+			return 0, errors.Wrap(err, "failed to read sprite's last data offset")
+		}
+	}
+	return int(sp.lastOffset - sp.offsets[idx]), nil
 }
