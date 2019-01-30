@@ -73,7 +73,7 @@ func (sp *sprite32Alpha) Frame(idx int) (image.Image, error) {
 	r := bufio.NewReader(&offsetedReader{sp.r, 0xe4c + int64(sp.offsets[idx])})
 	for y := 0; y < int(sp.frameHeight); y++ {
 		for x := 0; x < int(sp.frameWidth); {
-			var p struct{ Alpha, Red, Green, Blue byte }
+			var p sprite32AlphaPixel
 			if err := binary.Read(r, binary.LittleEndian, &p); err != nil {
 				return nil, errors.Wrap(err, "failed to read frame data")
 			}
@@ -111,3 +111,5 @@ func (sp *sprite32Alpha) frameSize(idx int) (int, error) {
 	}
 	return int(sp.lastOffset - sp.offsets[idx]), nil
 }
+
+type sprite32AlphaPixel struct{ Alpha, Red, Green, Blue uint8 }
