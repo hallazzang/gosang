@@ -18,6 +18,7 @@ func TestNewSprite(t *testing.T) {
 	}{
 		{"arrow.spr", 8, 20, 20, 10, 200, 20},
 		{"BUTTMENU_ONLINE_1.S32", 32, 24, 52, 2, 48, 52},
+		{"WindCutter.S32", 32, 640, 480, 15, 9600, 480},
 	} {
 		func() {
 			f, err := os.Open(filepath.Join("test", "data", tc.path))
@@ -52,7 +53,7 @@ func TestNewSprite(t *testing.T) {
 }
 
 func TestFrameSizeAndOffset(t *testing.T) {
-	for _, tc := range []string{"arrow.spr", "BUTTMENU_ONLINE_1.S32"} {
+	for _, tc := range []string{"arrow.spr", "BUTTMENU_ONLINE_1.S32", "WindCutter.S32"} {
 		func() {
 			f, err := os.Open(filepath.Join("test", "data", tc))
 			if err != nil {
