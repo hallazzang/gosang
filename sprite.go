@@ -33,10 +33,12 @@ func NewSprite(r io.ReaderAt) (Sprite, error) {
 	switch header.Signature {
 	default:
 		return nil, errors.Errorf("bad signature; expected 0x9 or 0xf, got %#x", header.Signature)
-	case 0x9:
+	case 0x09:
 		sp, err = newSprite8(r, header)
-	case 0xf:
+	case 0x0f:
 		sp, err = newSprite32(r, header)
+	case 0x19:
+		sp, err = newSprite32Alpha(r, header)
 	}
 	return sp, err
 }
