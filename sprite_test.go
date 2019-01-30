@@ -8,7 +8,7 @@ import (
 
 func TestNewSprite(t *testing.T) {
 	for _, tc := range []struct {
-		path        string
+		name        string
 		colorBits   int
 		frameWidth  int
 		frameHeight int
@@ -21,7 +21,7 @@ func TestNewSprite(t *testing.T) {
 		{"WindCutter.S32", 32, 640, 480, 15, 9600, 480},
 	} {
 		func() {
-			f, err := os.Open(filepath.Join("test", "data", tc.path))
+			f, err := os.Open(filepath.Join("test", "data", tc.name))
 			if err != nil {
 				t.Fatalf("failed to open sprite file: %v", err)
 			}
