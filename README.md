@@ -44,7 +44,7 @@ func main() {
 				panic(err)
 			}
 			defer out.Close()
-			if err := png.Encode(out, frame); err != nil {
+			if err := png.Encode(out, frame.Image()); err != nil {
 				panic(err)
 			}
 		}()
