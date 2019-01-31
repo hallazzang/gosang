@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestNewSprite(t *testing.T) {
+func TestOpenSprite(t *testing.T) {
 	for _, tc := range []struct {
 		name        string
 		colorBits   int
@@ -26,7 +26,7 @@ func TestNewSprite(t *testing.T) {
 				t.Fatalf("sprite %q: failed to open file: %v", tc.name, err)
 			}
 			defer f.Close()
-			sp, err := NewSprite(f)
+			sp, err := OpenSprite(f)
 			if err != nil {
 				t.Fatalf("sprite %q: failed to open sprite: %v", tc.name, err)
 			}
@@ -60,7 +60,7 @@ func TestFrameSizeAndOffset(t *testing.T) {
 				t.Fatalf("sprite %q: failed to open file: %v", name, err)
 			}
 			defer f.Close()
-			sp, err := NewSprite(f)
+			sp, err := OpenSprite(f)
 			if err != nil {
 				t.Fatalf("sprite %q: failed to open sprite: %v", name, err)
 			}
@@ -89,7 +89,7 @@ func TestGetFrame(t *testing.T) {
 		t.Fatalf("failed to open file: %v", err)
 	}
 	defer f.Close()
-	sp, err := NewSprite(f)
+	sp, err := OpenSprite(f)
 	if err != nil {
 		t.Fatalf("failed to open sprite: %v", err)
 	}

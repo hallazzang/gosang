@@ -21,10 +21,10 @@ type Sprite interface {
 	frameSize(idx int) (int, error)
 }
 
-// NewSprite creates new sprite from r. It can accept all three type of sprites:
-// 8-bit sprite(.spr), 32-bit sprite w/o alpha channel, 32-bit sprite w/ alpha
-// channel.
-func NewSprite(r io.ReaderAt) (Sprite, error) {
+// OpenSprite creates new sprite from r. It can accept all three type of
+// sprites: 8-bit sprite(.spr), 32-bit sprite w/o alpha channel, 32-bit
+// sprite w/ alpha channel.
+func OpenSprite(r io.ReaderAt) (Sprite, error) {
 	var header spriteHeader
 	if err := binary.Read(&offsetedReader{r, 0}, binary.LittleEndian, &header); err != nil {
 		return nil, errors.Wrap(err, "failed to read header")

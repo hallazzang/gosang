@@ -29,7 +29,7 @@ func main() {
 		panic(err)
 	}
 	defer f.Close()
-	sp, err := gosang.NewSprite(f)
+	sp, err := gosang.OpenSprite(f)
 	if err != nil {
 		panic(err)
 	}
