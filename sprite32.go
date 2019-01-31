@@ -70,7 +70,7 @@ func (sp *sprite32) Frame(idx int) (image.Image, error) {
 	if idx < 0 || idx > int(sp.frameCount-1) {
 		return nil, errors.New("frame index out of range")
 	}
-	img := image.NewRGBA(image.Rect(0, 0, int(sp.frameWidth), int(sp.frameHeight)))
+	img := image.NewNRGBA(image.Rect(0, 0, int(sp.frameWidth), int(sp.frameHeight)))
 	r := bufio.NewReader(&offsetedReader{sp.r, 0xe4c + int64(sp.offsets[idx])})
 	for y := 0; y < int(sp.frameHeight); y++ {
 		for x := 0; x < int(sp.frameWidth); {
@@ -79,7 +79,7 @@ func (sp *sprite32) Frame(idx int) (image.Image, error) {
 				return nil, errors.Wrap(err, "failed to read frame data")
 			}
 			for ; p.Count > 0; p.Count-- {
-				img.SetRGBA(int(x), int(y), color.RGBA{p.Red, p.Green, p.Blue, 0xff})
+				img.SetNRGBA(int(x), int(y), color.NRGBA{p.Red, p.Green, p.Blue, 0xff})
 				x++
 			}
 		}
