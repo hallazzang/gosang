@@ -7,6 +7,18 @@ import (
 	"github.com/pkg/errors"
 )
 
+type spriteBase struct {
+	r           io.ReaderAt
+	frameWidth  uint32
+	frameHeight uint32
+	frameCount  uint32
+	offsets     []uint32
+	width       uint32
+	height      uint32
+	lastOffset  uint32
+	frames      []*Frame
+}
+
 // Sprite represents single sprite. It can either be 8-bit or 32-bit sprite.
 type Sprite interface {
 	ColorBits() int   // Color bits. 8 or 32.

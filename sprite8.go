@@ -11,25 +11,17 @@ import (
 
 // sprite8 is an 8-bit color sprite.
 type sprite8 struct {
-	r           io.ReaderAt
-	frameWidth  uint32
-	frameHeight uint32
-	frameCount  uint32
-	offsets     []uint32
-	width       uint32
-	height      uint32
-	lastOffset  uint32
-	frames      []*Frame
+	spriteBase
 }
 
 func newSprite8(r io.ReaderAt, header spriteHeader) (*sprite8, error) {
-	sp := &sprite8{
+	sp := &sprite8{spriteBase{
 		r:           r,
 		frameWidth:  header.FrameWidth,
 		frameHeight: header.FrameHeight,
 		frameCount:  header.FrameCount,
 		offsets:     make([]uint32, header.FrameCount),
-	}
+	}}
 	if err := binary.Read(&offsetedReader{r, 0x4c0}, binary.LittleEndian, &sp.offsets); err != nil {
 		return nil, errors.Wrap(err, "failed to read frame offsets")
 	}
