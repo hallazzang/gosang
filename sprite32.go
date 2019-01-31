@@ -20,6 +20,7 @@ type sprite32 struct {
 	width       uint32
 	height      uint32
 	lastOffset  uint32
+	frames      []*Frame
 }
 
 func newSprite32(r io.ReaderAt, header spriteHeader) (*sprite32, error) {
