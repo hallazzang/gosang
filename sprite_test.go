@@ -82,3 +82,24 @@ func TestFrameSizeAndOffset(t *testing.T) {
 		}()
 	}
 }
+
+func TestGetFrame(t *testing.T) {
+	f, err := os.Open(filepath.Join("test", "data", "WindCutter.S32"))
+	if err != nil {
+		t.Fatalf("failed to open file: %v", err)
+	}
+	defer f.Close()
+	sp, err := NewSprite(f)
+	if err != nil {
+		t.Fatalf("failed to open sprite: %v", err)
+	}
+	fr, err := sp.Frame(0)
+	if err != nil {
+		t.Fatalf("failed to get frame #%d: %v", 0, err)
+	}
+	img := fr.Image()
+	bounds := img.Bounds()
+	if bounds.Dx() != fr.Width() || bounds.Dy() != fr.Height() {
+		t.Errorf("wrong frame size; expected %dx%d, got %dx%d", fr.Width(), fr.Height(), bounds.Dx(), bounds.Dy())
+	}
+}
