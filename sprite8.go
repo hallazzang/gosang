@@ -38,26 +38,6 @@ func (sp *sprite8) ColorBits() int {
 	return 8
 }
 
-func (sp *sprite8) FrameWidth() int {
-	return int(sp.frameWidth)
-}
-
-func (sp *sprite8) FrameHeight() int {
-	return int(sp.frameHeight)
-}
-
-func (sp *sprite8) FrameCount() int {
-	return int(sp.frameCount)
-}
-
-func (sp *sprite8) Width() int {
-	return int(sp.width)
-}
-
-func (sp *sprite8) Height() int {
-	return int(sp.height)
-}
-
 func (sp *sprite8) Frame(idx int) (*Frame, error) {
 	if idx < 0 || idx > int(sp.frameCount-1) {
 		return nil, errors.New("frame index out of range")
@@ -86,25 +66,4 @@ func (sp *sprite8) Frame(idx int) (*Frame, error) {
 		}
 	}
 	return newFrame(sp, idx, img), nil
-}
-
-func (sp *sprite8) frameOffset(idx int) (int64, error) {
-	if idx < 0 || idx > int(sp.frameCount-1) {
-		return 0, errors.New("frame index out of range")
-	}
-	return int64(sp.offsets[idx]), nil
-}
-
-func (sp *sprite8) frameSize(idx int) (int, error) {
-	if idx < 0 || idx > int(sp.frameCount-1) {
-		return 0, errors.New("frame index out of range")
-	} else if idx < int(sp.frameCount-1) {
-		return int(sp.offsets[idx+1] - sp.offsets[idx]), nil
-	}
-	if sp.lastOffset == 0 {
-		if err := binary.Read(&offsetedReader{sp.r, 0xbc8}, binary.LittleEndian, &sp.lastOffset); err != nil {
-			return 0, errors.Wrap(err, "failed to read sprite's last data offset")
-		}
-	}
-	return int(sp.lastOffset - sp.offsets[idx]), nil
 }
