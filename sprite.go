@@ -2,7 +2,6 @@ package gosang
 
 import (
 	"encoding/binary"
-	"image"
 	"io"
 
 	"github.com/pkg/errors"
@@ -16,7 +15,7 @@ type Sprite interface {
 	FrameCount() int
 	Width() int
 	Height() int
-	Frame(idx int) (image.Image, error) // Specific frame's data.
+	Frame(idx int) (*Frame, error) // Specific frame's data.
 
 	frameOffset(idx int) (int64, error)
 	frameSize(idx int) (int, error)

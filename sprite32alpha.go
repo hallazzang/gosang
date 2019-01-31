@@ -65,7 +65,7 @@ func (sp *sprite32Alpha) Height() int {
 	return int(sp.height)
 }
 
-func (sp *sprite32Alpha) Frame(idx int) (image.Image, error) {
+func (sp *sprite32Alpha) Frame(idx int) (*Frame, error) {
 	if idx < 0 || idx > int(sp.frameCount-1) {
 		return nil, errors.New("frame index out of range")
 	}
@@ -88,7 +88,7 @@ func (sp *sprite32Alpha) Frame(idx int) (image.Image, error) {
 			}
 		}
 	}
-	return img, nil
+	return newFrame(sp, idx, img), nil
 }
 
 func (sp *sprite32Alpha) frameOffset(idx int) (int64, error) {
