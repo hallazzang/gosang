@@ -39,63 +39,37 @@ func (sp *sprite32Alpha) ColorBits() int {
 	return 32
 }
 
-func (sp *sprite32Alpha) Frame(idx int) (*Frame, error) {
-	if idx < 0 || idx > int(sp.frameCount-1) {
-		return nil, errors.New("frame index out of range")
-	}
-	img := image.NewNRGBA(image.Rect(0, 0, int(sp.frameWidth), int(sp.frameHeight)))
-	r := bufio.NewReader(&offsetedReader{sp.r, 0xe4c + int64(sp.offsets[idx])})
-	for y := 0; y < int(sp.frameHeight); y++ {
-		for x := 0; x < int(sp.frameWidth); {
-			var p sprite32AlphaPixel
-			if err := binary.Read(r, binary.LittleEndian, &p); err != nil {
-				return nil, errors.Wrap(err, "failed to read frame data")
-			}
-			if p.Alpha == 0 && p.Green == 0 && p.Blue == 0 {
-				for ; p.Red > 0; p.Red-- {
-					img.SetNRGBA(int(x), int(y), color.NRGBA{0xfc, 0xe0, 0xfc, 0x00})
-					x++
-				}
-			} else {
-				img.SetNRGBA(int(x), int(y), color.NRGBA{p.Red, p.Green, p.Blue, p.Alpha})
-				x++
-			}
-		}
-	}
-	return newFrame(sp, idx, img), nil
-}
-
 func (sp *sprite32Alpha) Save(w io.Writer) error {
 	return nil
 }
 
-func (sp *sprite32Alpha) loadFrame(idx int) error {
+func (sp *sprite32Alpha) loadFrame(idx int) (*Frame, error) {
 	if idx < 0 || idx > int(sp.frameCount-1) {
-		return errors.New("frame index out of range")
-	} else if sp.frames[idx] != nil {
-		return nil
+		return nil, errors.New("frame index out of range")
 	}
-	img := image.NewNRGBA(image.Rect(0, 0, int(sp.frameWidth), int(sp.frameHeight)))
-	r := bufio.NewReader(&offsetedReader{sp.r, 0xe4c + int64(sp.offsets[idx])})
-	for y := 0; y < int(sp.frameHeight); y++ {
-		for x := 0; x < int(sp.frameWidth); {
-			var p sprite32AlphaPixel
-			if err := binary.Read(r, binary.LittleEndian, &p); err != nil {
-				return errors.Wrap(err, "failed to read frame data")
-			}
-			if p.Alpha == 0 && p.Green == 0 && p.Blue == 0 {
-				for ; p.Red > 0; p.Red-- {
-					img.SetNRGBA(int(x), int(y), color.NRGBA{0xfc, 0xe0, 0xfc, 0x00})
+	if sp.frames[idx] == nil {
+		img := image.NewNRGBA(image.Rect(0, 0, int(sp.frameWidth), int(sp.frameHeight)))
+		r := bufio.NewReader(&offsetedReader{sp.r, 0xe4c + int64(sp.offsets[idx])})
+		for y := 0; y < int(sp.frameHeight); y++ {
+			for x := 0; x < int(sp.frameWidth); {
+				var p sprite32AlphaPixel
+				if err := binary.Read(r, binary.LittleEndian, &p); err != nil {
+					return nil, errors.Wrap(err, "failed to read frame data")
+				}
+				if p.Alpha == 0 && p.Green == 0 && p.Blue == 0 {
+					for ; p.Red > 0; p.Red-- {
+						img.SetNRGBA(int(x), int(y), color.NRGBA{0xfc, 0xe0, 0xfc, 0x00})
+						x++
+					}
+				} else {
+					img.SetNRGBA(int(x), int(y), color.NRGBA{p.Red, p.Green, p.Blue, p.Alpha})
 					x++
 				}
-			} else {
-				img.SetNRGBA(int(x), int(y), color.NRGBA{p.Red, p.Green, p.Blue, p.Alpha})
-				x++
 			}
 		}
+		sp.frames[idx] = newFrame(sp, idx, img)
 	}
-	sp.frames[idx] = newFrame(sp, idx, img)
-	return nil
+	return sp.frames[idx], nil
 }
 
 type sprite32AlphaPixel struct{ Alpha, Red, Green, Blue uint8 }

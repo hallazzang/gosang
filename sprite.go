@@ -20,7 +20,7 @@ type Sprite interface {
 
 	frameOffset(idx int) (int64, error)
 	frameSize(idx int) (int, error)
-	loadFrame(idx int) error
+	loadFrame(idx int) (*Frame, error)
 }
 
 // OpenSprite creates new sprite from r. It can accept all three type of
@@ -42,6 +42,11 @@ func OpenSprite(r io.ReaderAt) (Sprite, error) {
 		sp, err = newSprite32(r, header)
 	case 0x19:
 		sp, err = newSprite32Alpha(r, header)
+	}
+	for i := uint32(0); i < header.FrameCount; i++ {
+		if _, err := sp.loadFrame(int(i)); err != nil {
+			return nil, errors.Wrapf(err, "failed to load frame #%d", i)
+		}
 	}
 	return sp, err
 }
@@ -76,6 +81,13 @@ func (sp *sprite) Width() int {
 
 func (sp *sprite) Height() int {
 	return int(sp.height)
+}
+
+func (sp *sprite) Frame(idx int) (*Frame, error) {
+	if idx < 0 || idx > int(sp.frameCount-1) {
+		return nil, errors.New("frame index out of range")
+	}
+	return sp.frames[idx], nil
 }
 
 func (sp *sprite) frameOffset(idx int) (int64, error) {
