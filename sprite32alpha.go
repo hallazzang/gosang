@@ -11,11 +11,11 @@ import (
 )
 
 type sprite32Alpha struct {
-	spriteBase
+	sprite
 }
 
 func newSprite32Alpha(r io.ReaderAt, header spriteHeader) (*sprite32Alpha, error) {
-	sp := &sprite32Alpha{spriteBase{
+	sp := &sprite32Alpha{sprite{
 		r:           r,
 		frameWidth:  header.FrameWidth,
 		frameHeight: header.FrameHeight,

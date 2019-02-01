@@ -12,11 +12,11 @@ import (
 
 // sprite32 is a 32-bit color sprite.
 type sprite32 struct {
-	spriteBase
+	sprite
 }
 
 func newSprite32(r io.ReaderAt, header spriteHeader) (*sprite32, error) {
-	sp := &sprite32{spriteBase{
+	sp := &sprite32{sprite{
 		r:           r,
 		frameWidth:  header.FrameWidth,
 		frameHeight: header.FrameHeight,

@@ -11,11 +11,11 @@ import (
 
 // sprite8 is an 8-bit color sprite.
 type sprite8 struct {
-	spriteBase
+	sprite
 }
 
 func newSprite8(r io.ReaderAt, header spriteHeader) (*sprite8, error) {
-	sp := &sprite8{spriteBase{
+	sp := &sprite8{sprite{
 		r:           r,
 		frameWidth:  header.FrameWidth,
 		frameHeight: header.FrameHeight,
