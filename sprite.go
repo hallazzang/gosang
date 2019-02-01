@@ -10,6 +10,7 @@ import (
 // Sprite represents single sprite. It can either be 8-bit or 32-bit sprite.
 type Sprite interface {
 	ColorBits() int   // Color bits. 8 or 32.
+	HasAlpha() bool   // Whether frame has alpha channel or not.
 	FrameWidth() int  // Frame's width in pixels.
 	FrameHeight() int // Frame's height in pixels.
 	FrameCount() int

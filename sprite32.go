@@ -40,6 +40,10 @@ func (sp *sprite32) ColorBits() int {
 	return 32
 }
 
+func (sp *sprite32) HasAlpha() bool {
+	return false
+}
+
 func (sp *sprite32) Save(w io.Writer) error {
 	return nil
 }
