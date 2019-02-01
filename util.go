@@ -1,8 +1,11 @@
 package gosang
 
 import (
+	"bytes"
 	"image/color"
 	"io"
+
+	"github.com/pkg/errors"
 )
 
 // offsetedReader implements io.Reader combining io.ReaderAt and offset.
@@ -15,6 +18,21 @@ func (or *offsetedReader) Read(p []byte) (int, error) {
 	n, err := or.r.ReadAt(p, or.offset)
 	or.offset += int64(n)
 	return n, err
+}
+
+func advanceWriter(w io.Writer, n int) error {
+	b := []byte{0}
+	for n > 0 {
+		c := n
+		if c > 8192 {
+			c = 8192
+		}
+		if _, err := w.Write(bytes.Repeat(b, c)); err != nil {
+			return errors.Wrap(err, "failed to write empty bytes")
+		}
+		n -= c
+	}
+	return nil
 }
 
 // sprite8Palette is a color palette used by 8-bit color sprites.

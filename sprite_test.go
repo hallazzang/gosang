@@ -1,6 +1,7 @@
 package gosang
 
 import (
+	"bytes"
 	"os"
 	"path/filepath"
 	"testing"
@@ -101,5 +102,28 @@ func TestGetFrame(t *testing.T) {
 	bounds := img.Bounds()
 	if bounds.Dx() != fr.Width() || bounds.Dy() != fr.Height() {
 		t.Errorf("wrong frame size; expected %dx%d, got %dx%d", fr.Width(), fr.Height(), bounds.Dx(), bounds.Dy())
+	}
+}
+
+func TestSaveSprite(t *testing.T) {
+	f, err := os.Open(filepath.Join("test", "data", "WindCutter.S32"))
+	if err != nil {
+		t.Fatalf("failed to open file: %v", err)
+	}
+	defer f.Close()
+	sp, err := OpenSprite(f)
+	if err != nil {
+		t.Fatalf("failed to open sprite: %v", err)
+	}
+	b := new(bytes.Buffer)
+	if err := sp.Save(b); err != nil {
+		t.Fatal(err)
+	}
+	fi, err := f.Stat()
+	if err != nil {
+		t.Fatalf("failed to get file stat: %v", err)
+	}
+	if fi.Size() != int64(b.Len()) {
+		t.Fatalf("data size mismatched; expected %d, got %d", fi.Size(), b.Len())
 	}
 }
