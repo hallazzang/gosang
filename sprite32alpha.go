@@ -64,4 +64,8 @@ func (sp *sprite32Alpha) Frame(idx int) (*Frame, error) {
 	return newFrame(sp, idx, img), nil
 }
 
+func (sp *sprite32Alpha) Save(w io.Writer) error {
+	return nil
+}
+
 type sprite32AlphaPixel struct{ Alpha, Red, Green, Blue uint8 }

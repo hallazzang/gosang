@@ -67,3 +67,7 @@ func (sp *sprite8) Frame(idx int) (*Frame, error) {
 	}
 	return newFrame(sp, idx, img), nil
 }
+
+func (sp *sprite8) Save(w io.Writer) error {
+	return nil
+}

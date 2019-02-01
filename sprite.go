@@ -16,6 +16,7 @@ type Sprite interface {
 	Width() int
 	Height() int
 	Frame(idx int) (*Frame, error) // Specific frame's data.
+	Save(w io.Writer) error        // Write sprite data to w.
 
 	frameOffset(idx int) (int64, error)
 	frameSize(idx int) (int, error)

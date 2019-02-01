@@ -60,4 +60,8 @@ func (sp *sprite32) Frame(idx int) (*Frame, error) {
 	return newFrame(sp, idx, img), nil
 }
 
+func (sp *sprite32) Save(w io.Writer) error {
+	return nil
+}
+
 type sprite32Pixel struct{ Count, Blue, Green, Red uint8 }
