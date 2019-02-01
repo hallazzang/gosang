@@ -22,6 +22,7 @@ func newSprite32(r io.ReaderAt, header spriteHeader) (*sprite32, error) {
 		frameHeight: header.FrameHeight,
 		frameCount:  header.FrameCount,
 		offsets:     make([]uint32, header.FrameCount),
+		frames:      make([]*Frame, header.FrameCount),
 	}}
 	if err := binary.Read(&offsetedReader{r, 0x4c0}, binary.LittleEndian, &sp.offsets); err != nil {
 		return nil, errors.Wrap(err, "failed to read frame offsets")
@@ -61,6 +62,30 @@ func (sp *sprite32) Frame(idx int) (*Frame, error) {
 }
 
 func (sp *sprite32) Save(w io.Writer) error {
+	return nil
+}
+
+func (sp *sprite32) loadFrame(idx int) error {
+	if idx < 0 || idx > int(sp.frameCount-1) {
+		return errors.New("frame index out of range")
+	} else if sp.frames[idx] != nil {
+		return nil
+	}
+	img := image.NewNRGBA(image.Rect(0, 0, int(sp.frameWidth), int(sp.frameHeight)))
+	r := bufio.NewReader(&offsetedReader{sp.r, 0xe4c + int64(sp.offsets[idx])})
+	for y := 0; y < int(sp.frameHeight); y++ {
+		for x := 0; x < int(sp.frameWidth); {
+			var p sprite32Pixel
+			if err := binary.Read(r, binary.LittleEndian, &p); err != nil {
+				return errors.Wrap(err, "failed to read frame data")
+			}
+			for ; p.Count > 0; p.Count-- {
+				img.SetNRGBA(int(x), int(y), color.NRGBA{p.Red, p.Green, p.Blue, 0xff})
+				x++
+			}
+		}
+	}
+	sp.frames[idx] = newFrame(sp, idx, img)
 	return nil
 }
 

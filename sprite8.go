@@ -21,6 +21,7 @@ func newSprite8(r io.ReaderAt, header spriteHeader) (*sprite8, error) {
 		frameHeight: header.FrameHeight,
 		frameCount:  header.FrameCount,
 		offsets:     make([]uint32, header.FrameCount),
+		frames:      make([]*Frame, header.FrameCount),
 	}}
 	if err := binary.Read(&offsetedReader{r, 0x4c0}, binary.LittleEndian, &sp.offsets); err != nil {
 		return nil, errors.Wrap(err, "failed to read frame offsets")
@@ -69,5 +70,38 @@ func (sp *sprite8) Frame(idx int) (*Frame, error) {
 }
 
 func (sp *sprite8) Save(w io.Writer) error {
+	return nil
+}
+
+func (sp *sprite8) loadFrame(idx int) error {
+	if idx < 0 || idx > int(sp.frameCount-1) {
+		return errors.New("frame index out of range")
+	} else if sp.frames[idx] != nil {
+		return nil
+	}
+	img := image.NewPaletted(image.Rect(0, 0, int(sp.frameWidth), int(sp.frameHeight)), sprite8Palette)
+	r := bufio.NewReader(&offsetedReader{sp.r, 0xbf4 + int64(sp.offsets[idx])})
+	for y := uint32(0); y < sp.frameHeight; y++ {
+		for x := uint32(0); x < sp.frameWidth; {
+			b, err := r.ReadByte()
+			if err != nil {
+				return errors.Wrap(err, "failed to read frame data")
+			}
+			if b == 0xfe {
+				c, err := r.ReadByte()
+				if err != nil {
+					return errors.Wrap(err, "failed to read frame data")
+				}
+				for ; c > 0; c-- {
+					img.SetColorIndex(int(x), int(y), b)
+					x++
+				}
+			} else {
+				img.SetColorIndex(int(x), int(y), b)
+				x++
+			}
+		}
+	}
+	sp.frames[idx] = newFrame(sp, idx, img)
 	return nil
 }

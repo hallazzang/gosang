@@ -20,6 +20,7 @@ type Sprite interface {
 
 	frameOffset(idx int) (int64, error)
 	frameSize(idx int) (int, error)
+	loadFrame(idx int) error
 }
 
 // OpenSprite creates new sprite from r. It can accept all three type of
