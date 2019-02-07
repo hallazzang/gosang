@@ -2,6 +2,7 @@ package gosang
 
 import (
 	"bytes"
+	"image"
 	"image/color"
 	"io"
 
@@ -33,6 +34,17 @@ func advanceWriter(w io.Writer, n int) error {
 		n -= c
 	}
 	return nil
+}
+
+func rgbaAt(img image.Image, x, y int) (r, g, b, a uint8) {
+	switch p := img.At(x, y).(type) {
+	case color.NRGBA:
+		r, g, b, a = p.R, p.G, p.B, p.A
+	default:
+		tr, tg, tb, ta := p.RGBA()
+		r, g, b, a = uint8(tr), uint8(tg), uint8(tb), uint8(ta)
+	}
+	return
 }
 
 // sprite8Palette is a color palette used by 8-bit color sprites.
