@@ -148,48 +148,64 @@ func (sp *sprite32) encodeFrame(w io.Writer, idx int) (int, error) {
 	}
 	n := 0
 	for y := 0; y < height; y++ {
-		c := uint8(0)
-		for x := 0; x < width; x++ {
+		// c := uint8(0)
+		// for x := 0; x < width; x++ {
+		// 	r, g, b, _ := rgbaAt(img, x, y)
+		// 	if x+1 != width {
+		// 		tr, tg, tb, _ := rgbaAt(img, x+1, y)
+		// 		if r == tr && g == tg && b == tb && c < 0xff {
+		// 			if x == 0 {
+		// 				c += 2
+		// 			} else if c < 1 {
+		// 				if err := binary.Write(w, binary.LittleEndian, sprite32Pixel{1, b, g, r}); err != nil {
+		// 					return n, errors.Wrap(err, "failed to write frame data")
+		// 				}
+		// 				n += 4
+		// 				c++
+		// 			} else {
+		// 				c++
+		// 			}
+		// 		} else {
+		// 			if c > 0 {
+		// 				if err := binary.Write(w, binary.LittleEndian, sprite32Pixel{c, b, g, r}); err != nil {
+		// 					return n, errors.Wrap(err, "failed to write frame data")
+		// 				}
+		// 			} else {
+		// 				if err := binary.Write(w, binary.LittleEndian, sprite32Pixel{1, b, g, r}); err != nil {
+		// 					return n, errors.Wrap(err, "failed to write frame data")
+		// 				}
+		// 			}
+		// 			n += 4
+		// 			c = 0
+		// 		}
+		// 	} else {
+		// 		if c > 0 {
+		// 			if err := binary.Write(w, binary.LittleEndian, sprite32Pixel{c, b, g, r}); err != nil {
+		// 				return n, errors.Wrap(err, "failed to write frame data")
+		// 			}
+		// 		} else {
+		// 			if err := binary.Write(w, binary.LittleEndian, sprite32Pixel{1, b, g, r}); err != nil {
+		// 				return n, errors.Wrap(err, "failed to write frame data")
+		// 			}
+		// 		}
+		// 		n += 4
+		// 	}
+		// }
+		for x := 0; x < width; {
 			r, g, b, _ := rgbaAt(img, x, y)
-			if x+1 != width {
-				tr, tg, tb, _ := rgbaAt(img, x+1, y)
-				if r == tr && g == tg && b == tb && c < 0xff {
-					if x == 0 {
-						c += 2
-					} else if c < 1 {
-						if err := binary.Write(w, binary.LittleEndian, sprite32Pixel{1, b, g, r}); err != nil {
-							return n, errors.Wrap(err, "failed to write frame data")
-						}
-						n += 4
-						c++
-					} else {
-						c++
-					}
-				} else {
-					if c > 0 {
-						if err := binary.Write(w, binary.LittleEndian, sprite32Pixel{c, b, g, r}); err != nil {
-							return n, errors.Wrap(err, "failed to write frame data")
-						}
-					} else {
-						if err := binary.Write(w, binary.LittleEndian, sprite32Pixel{1, b, g, r}); err != nil {
-							return n, errors.Wrap(err, "failed to write frame data")
-						}
-					}
-					n += 4
-					c = 0
+			c := uint8(1)
+			for x++; x < width && c < 0xff; {
+				tr, tg, tb, _ := rgbaAt(img, x, y)
+				if tr != r || tg != g || tb != b {
+					break
 				}
-			} else {
-				if c > 0 {
-					if err := binary.Write(w, binary.LittleEndian, sprite32Pixel{c, b, g, r}); err != nil {
-						return n, errors.Wrap(err, "failed to write frame data")
-					}
-				} else {
-					if err := binary.Write(w, binary.LittleEndian, sprite32Pixel{1, b, g, r}); err != nil {
-						return n, errors.Wrap(err, "failed to write frame data")
-					}
-				}
-				n += 4
+				x++
+				c++
 			}
+			if err := binary.Write(w, binary.LittleEndian, sprite32Pixel{c, b, g, r}); err != nil {
+				return n, errors.Wrap(err, "failed to write frame data")
+			}
+			n += 4
 		}
 	}
 	return n, nil
